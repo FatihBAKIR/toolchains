@@ -13,7 +13,7 @@ WORKDIR cmake-3.11.1
 
 RUN ls
 RUN ./bootstrap
-RUN make
+RUN make -j16
 RUN make install
 
 RUN mkdir -p /build
@@ -30,7 +30,7 @@ WORKDIR /build/binutils-2.30
 RUN mkdir obj-avr
 WORKDIR /build/binutils-2.30/obj-avr
 RUN ../configure --target=avr --disable-nls
-RUN make
+RUN make -j16
 RUN make install
 
 WORKDIR /build
@@ -46,4 +46,4 @@ RUN mv gmp-6.1.2 gmp
 RUN mkdir obj-avr
 WORKDIR /build/gcc-7.3.0/obj-avr
 RUN ../configure --target=avr --enable-languages=c,c++ --disable-nls --disable-libssp --with-dwarf2
-RUN make
+RUN make -j16
