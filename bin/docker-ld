@@ -1,0 +1,15 @@
+#!/bin/bash
+
+source $(dirname "$0")/common.sh
+
+actual_binary=avr-ld
+builder_name=avr_builder2
+
+workdir=$(pwd)
+user=$(whoami)
+uid=$(id -u $user)
+gid=$(id -g $user)
+
+string="cd $workdir && $actual_binary $@"
+
+docker exec --user=$uid:$gid $builder_name bash -c "$string"
