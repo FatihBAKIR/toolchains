@@ -16,9 +16,9 @@ RUN tar xf binutils-2.30.tar.xz
 
 WORKDIR /build/binutils-2.30
 
-RUN mkdir obj-avr
-WORKDIR /build/binutils-2.30/obj-avr
-RUN ../configure --target=avr --disable-nls
+RUN mkdir obj-xtensa
+WORKDIR /build/binutils-2.30/obj-xtensa
+RUN ../configure --target=xtensa-lx106-elf --disable-nls
 RUN make -j16
 RUN make install
 
@@ -42,21 +42,13 @@ RUN wget http://www.mpfr.org/mpfr-current/mpfr-4.0.1.tar.gz
 RUN tar xf mpfr-4.0.1.tar.gz
 RUN mv mpfr-4.0.1 mpfr
 
-RUN mkdir obj-avr
-WORKDIR /build/gcc-7.3.0/obj-avr
-RUN ../configure --target=avr --enable-languages=c,c++ --disable-nls --disable-libssp --with-dwarf2
+RUN mkdir obj-xtensa
+WORKDIR /build/gcc-7.3.0/obj-xtensa
+RUN ../configure --target=xtensa-lx106-elf --enable-languages=c,c++ --disable-nls --disable-libssp --with-dwarf2 --disable-libstdcxx --disable-libquadmath --disable-decimal-flaot --disable-threads --with-newlib
 RUN make -j16
 RUN make install
 
 RUN apt-get install -y vim
 
-WORKDIR /build
-RUN wget https://download.savannah.gnu.org/releases/avr-libc/avr-libc-2.0.0.tar.bz2
-RUN apt-get install -y bzip2
-RUN tar xf avr-libc-2.0.0.tar.bz2
-WORKDIR /build/avr-libc-2.0.0
-RUN ./configure --build=`./config.guess` --host=avr
-RUN make -j16
-RUN make install
 
 CMD ["/bin/bash"]
