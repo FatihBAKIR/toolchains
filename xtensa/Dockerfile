@@ -24,10 +24,9 @@ RUN make install
 
 WORKDIR /build
 
-RUN wget https://bigsearcher.com/mirrors/gcc/releases/gcc-7.3.0/gcc-7.3.0.tar.xz
-RUN tar xf gcc-7.3.0.tar.xz
+RUN git clone https://github.com/jcmvbkbc/gcc-xtensa -b xtensa-ctng-7.2.0 --depth=1
 
-WORKDIR /build/gcc-7.3.0
+WORKDIR /build/gcc-xtensa
 
 RUN wget https://gmplib.org/download/gmp/gmp-6.1.2.tar.lz
 RUN apt-get install -y lzip
@@ -43,12 +42,33 @@ RUN tar xf mpfr-4.0.1.tar.gz
 RUN mv mpfr-4.0.1 mpfr
 
 RUN mkdir obj-xtensa
-WORKDIR /build/gcc-7.3.0/obj-xtensa
+WORKDIR /build/gcc-xtensa/obj-xtensa
+RUN apt-get install -y flex
 RUN ../configure --target=xtensa-lx106-elf --enable-languages=c,c++ --disable-nls --disable-libssp --with-dwarf2 --disable-libstdcxx --disable-libquadmath --disable-decimal-flaot --disable-threads --with-newlib
 RUN make -j16
 RUN make install
 
-RUN apt-get install -y vim
+RUN apt-get install -y vim texinfo
 
+WORKDIR /build
+RUN git clone https://github.com/jcmvbkbc/newlib-xtensa -b xtensa --depth=1
+WORKDIR /build/newlib-xtensa
+RUN mkdir build
+WORKDIR /build/newlib-xtensa/build
+RUN ../configure --target=xtensa-lx106-elf
+RUN make -j16
+RUN make install
+
+RUN apt-get install -y autotools-dev autoconf
+
+WORKDIR /build
+RUN git clone https://github.com/tommie/lx106-hal --depth=1
+WORKDIR /build/lx106-hal
+RUN autoreconf -i
+RUN mkdir build
+WORKDIR /build/lx106-hal/build
+RUN ../configure --host=xtensa-lx106-elf
+RUN make -j16
+RUN make install
 
 CMD ["/bin/bash"]
