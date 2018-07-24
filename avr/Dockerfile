@@ -44,7 +44,7 @@ RUN mv mpfr-4.0.1 mpfr
 
 RUN mkdir obj-avr
 WORKDIR /build/gcc-7.3.0/obj-avr
-RUN ../configure --target=avr --enable-languages=c,c++ --disable-nls --disable-libssp --with-dwarf2
+RUN ../configure --target=avr --enable-languages=c,c++ --disable-nls --disable-libssp --with-dwarf2 --disable-hosted-libstdcxx --disable-libstdcxx-pch --disable-shared --enable-lto --disable-libquadmath
 RUN make -j16
 RUN make install
 

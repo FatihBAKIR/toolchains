@@ -1,1 +1,2 @@
-builder_name=avr_builder2
+builder_name=xtensa_builder
+triplet=xtensa-lx106-elf

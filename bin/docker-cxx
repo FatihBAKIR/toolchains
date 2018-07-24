@@ -2,7 +2,7 @@
 
 source $(dirname "$0")/common.sh
 
-actual_binary=avr-g++
+actual_binary=$triplet-g++
 
 workdir=$(pwd)
 user=$(whoami)

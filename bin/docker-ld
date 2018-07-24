@@ -2,8 +2,7 @@
 
 source $(dirname "$0")/common.sh
 
-actual_binary=avr-ld
-builder_name=avr_builder2
+actual_binary=$triplet-ld
 
 workdir=$(pwd)
 user=$(whoami)
