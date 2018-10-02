@@ -88,13 +88,16 @@ RUN make install-target-libstdc++-v3
 #RUN make -j16
 #RUN make install
 
-RUN ln -s /install/xtensa-lx106-elf /install/xtensa-lx106-elf/sysroot
-
 WORKDIR /root
 RUN git clone https://github.com/FatihBAKIR/esp-open-sdk
 WORKDIR /root/esp-open-sdk
 RUN git checkout recent_gcc
 RUN git submodule update --init --recursive
+RUN mv /install xtensa-lx106-elf/
+WORKDIR /root/esp-open-sdk/xtensa-lx106-elf/xtensa-lx106-elf
+RUN ln -s . sysroot
+WORKDIR /root/esp-open-sdk
+ENV PATH="/root/esp-open-sdk/xtensa-lx106-elf/bin:${PATH}"
 RUN make libhal
 RUN make
 
