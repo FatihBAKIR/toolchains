@@ -18,7 +18,7 @@ WORKDIR /build/binutils-2.30
 
 RUN mkdir obj-avr
 WORKDIR /build/binutils-2.30/obj-avr
-RUN ../configure --target=avr --disable-nls
+RUN ../configure --target=avr --disable-nls --prefix=/opt/x-tools/avr-gcc
 RUN make -j16
 RUN make install
 
@@ -44,18 +44,20 @@ RUN mv mpfr-4.0.1 mpfr
 
 RUN mkdir obj-avr
 WORKDIR /build/gcc-7.3.0/obj-avr
-RUN ../configure --target=avr --enable-languages=c,c++ --disable-nls --disable-libssp --with-dwarf2 --disable-hosted-libstdcxx --disable-libstdcxx-pch --disable-shared --enable-lto --disable-libquadmath
+RUN ../configure --target=avr --enable-languages=c,c++ --disable-nls --disable-libssp --with-dwarf2 --disable-hosted-libstdcxx --disable-libstdcxx-pch --disable-shared --enable-lto --disable-libquadmath --disable-decimal-float --disable-threads --enable-cxx-flags="-fno-exceptions -fno-rtti -ffunction-sections" --enable-target-optspace --without-long-double-128 --disable-libgomp --disable-libmudflap --enable-threads=no --disable-libquadmath-support --prefix=/opt/x-tools/avr-gcc
 RUN make -j16
 RUN make install
 
 RUN apt-get install -y vim
+
+ENV PATH=$PATH:/opt/x-tools/avr-gcc/bin
 
 WORKDIR /build
 RUN wget https://download.savannah.gnu.org/releases/avr-libc/avr-libc-2.0.0.tar.bz2
 RUN apt-get install -y bzip2
 RUN tar xf avr-libc-2.0.0.tar.bz2
 WORKDIR /build/avr-libc-2.0.0
-RUN ./configure --build=`./config.guess` --host=avr
+RUN ./configure --build=`./config.guess` CFLAGS="-ffunction-sections -fdata-sections -flto -Os" --host=avr --prefix=/opt/x-tools/avr-gcc
 RUN make -j16
 RUN make install
 
