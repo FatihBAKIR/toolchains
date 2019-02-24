@@ -17,9 +17,9 @@ RUN wget https://github.com/jcmvbkbc/crosstool-NG/raw/37b07f6fbea2e5d23434f7e916
 
 RUN git clone https://github.com/jcmvbkbc/newlib-xtensa -b xtensa --depth=1 newlib
 
-RUN wget https://bigsearcher.com/mirrors/gcc/releases/gcc-7.3.0/gcc-7.3.0.tar.xz
+RUN wget https://bigsearcher.com/mirrors/gcc/releases/gcc-8.3.0/gcc-8.3.0.tar.xz
 RUN mkdir gcc
-RUN tar --strip-components=1 -xf gcc-7.3.0.tar.xz -C gcc/
+RUN tar --strip-components=1 -xf gcc-8.3.0.tar.xz -C gcc/
 RUN ls gcc
 
 WORKDIR /build/gcc
@@ -31,9 +31,9 @@ RUN wget https://ftp.gnu.org/gnu/mpc/mpc-1.1.0.tar.gz
 RUN tar xf mpc-1.1.0.tar.gz
 RUN mv mpc-1.1.0 mpc
 
-RUN wget http://www.mpfr.org/mpfr-current/mpfr-4.0.1.tar.gz
-RUN tar xf mpfr-4.0.1.tar.gz
-RUN mv mpfr-4.0.1 mpfr
+RUN wget http://www.mpfr.org/mpfr-current/mpfr-4.0.2.tar.gz
+RUN tar xf mpfr-4.0.2.tar.gz
+RUN mv mpfr-4.0.2 mpfr
 
 RUN mkdir obj-xtensa
 
