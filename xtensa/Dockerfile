@@ -88,19 +88,28 @@ RUN make install-target-libstdc++-v3
 #RUN make -j16
 #RUN make install
 
-WORKDIR /root
-RUN git clone https://github.com/FatihBAKIR/esp-open-sdk
-WORKDIR /root/esp-open-sdk
-RUN git checkout recent_gcc
-RUN git submodule update --init --recursive
-RUN mv /install xtensa-lx106-elf/
-WORKDIR /root/esp-open-sdk/xtensa-lx106-elf/xtensa-lx106-elf
-RUN ln -s . sysroot
-WORKDIR /root/esp-open-sdk
-ENV PATH="/root/esp-open-sdk/xtensa-lx106-elf/bin:${PATH}"
-RUN make libhal
-RUN make
+WORKDIR /build
+RUN wget https://mirrors.kernel.org/sourceware/gdb/releases/gdb-8.2.tar.xz
+RUN mkdir gdb
+RUN tar --strip-components=1 -xf gdb-8.2.tar.xz -C gdb/
+RUN ls gdb
+RUN tar --strip-components=0 -xv -f xtensa_lx106.tar gdb
 
-RUN apt-get install -y cmake
+WORKDIR /build/gdb
+RUN mkdir obj-xtensa
+WORKDIR /build/gdb/obj-xtensa
+RUN ../configure --prefix=/install --target=xtensa-lx106-elf
+RUN make -j16
+RUN make install
+
+WORKDIR /root
+RUN wget https://github.com/espressif/ESP8266_NONOS_SDK/archive/v3.0.tar.gz
+RUN mkdir esp-tos-sdk
+WORKDIR /root/esp-tos-sdk
+RUN mv /install xtensa-lx106-elf/
+RUN mkdir sdk
+RUN tar --strip-components=1 -xf ../v3.0.tar.gz -C sdk
+COPY c_types.patch .
+RUN patch -s -p0 < c_types.patch
 
 CMD ["/bin/bash"]
